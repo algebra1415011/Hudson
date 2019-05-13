@@ -37,7 +37,7 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
                 val intent= Intent(this,UserCommentActivity::class.java)
                 var localuser = dbHandler!!.getUsers()
 //        Toast.makeText(this,localuser, Toast.LENGTH_LONG).show()
-                intent.putExtra("usercommentimg", localuser.toString())
+                intent.putExtra("usercommentimg", p0.username.text.toString())
                 startActivity(intent)
 
             }
@@ -45,9 +45,8 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
             R.id.userimg ->{
                 Toast.makeText(getApplicationContext(),p0.userimg.getTag().toString(),Toast.LENGTH_SHORT).show();
                 val intent= Intent(this, UserCommentActivity::class.java)
-                var localuser = dbHandler!!.getUsers()
 //        Toast.makeText(this,localuser, Toast.LENGTH_LONG).show()
-                intent.putExtra("usercommentimg", localuser.toString())
+                intent.putExtra("usercommentimg", p0.userimg.getTag().toString())
 
                 startActivity(intent)
 

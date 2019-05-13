@@ -38,9 +38,9 @@ class UserAdapter(val context: Context, val userData: List<User>,var clickListen
     {
         fun setData(user: User, position: Int) {
             itemView.username.setText(userData[position].name)
-            val id: Int= context.getResources().getIdentifier(userData[position].name, "drawable", context.getPackageName())
+            val id: Int= context.getResources().getIdentifier(userData[position].userID, "drawable", context.getPackageName())
             itemView.userimg.setImageResource(id)
-            itemView.userimg.setTag(user.name)
+            itemView.userimg.setTag(userData[position].userID)
             dbHandler = DatabaseHelper(context)
             var isRated = dbHandler!!.isRated(userData[position].userID)
             Toast.makeText(context,isRated, Toast.LENGTH_LONG).show()

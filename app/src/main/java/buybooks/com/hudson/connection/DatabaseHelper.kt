@@ -11,10 +11,11 @@ internal class DatabaseHelper(context: Context) :
 
     override fun onCreate(db: SQLiteDatabase?) {
         val CREATE_TABLE = "CREATE TABLE $TABLE_NAME " +
-                "($USERID TEXT PRIMARY KEY)"
-        db?.execSQL(CREATE_TABLE)
+                "($USERID TEXT PRIMARY KEY);"
         val CREATE_TABLE1 = "CREATE TABLE $TABLE_NAME1 " +
-                "($USERID TEXT PRIMARY KEY,)"
+                "($USERID TEXT PRIMARY KEY,$ISRATED TEXT NOT NULL);"
+        db!!.execSQL(CREATE_TABLE)
+        db!!.execSQL(CREATE_TABLE1)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {

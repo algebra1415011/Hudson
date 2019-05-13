@@ -114,8 +114,12 @@ class UserCommentActivity : AppCompatActivity(), View.OnClickListener {
         //rating button
 
         ratingbt.setOnClickListener{
+            dbHandler = DatabaseHelper(this)
+            var isRated = dbHandler!!.addRating(intent.getStringExtra("usercommentimg"),"true")
+            Toast.makeText(this,"rating is added"+isRated.toString(), Toast.LENGTH_LONG).show()
             val intent= Intent(this,ThanksActivity::class.java)
             intent.putExtra("activity","ratingact")
+
 
             startActivity(intent)
         }
