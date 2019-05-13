@@ -6,21 +6,25 @@ import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.util.Log
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import buybooks.com.hudson.adapter.UserAdapter
+import buybooks.com.hudson.connection.DatabaseHelper
 import buybooks.com.hudson.controller.APIController
 import buybooks.com.hudson.model.User
 import buybooks.com.hudson.user.UserCommentActivity
 import buybooks.com.hudson.user.UserIdeaActivity
 import buybooks.com.hudson.volley.ServiceVolley
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.commentlayout.*
-import kotlinx.android.synthetic.main.gdmodel_layout.*
 import kotlinx.android.synthetic.main.gdmodel_layout.view.*
 import org.json.JSONArray
 import org.json.JSONObject
 
 class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
+
+    val userID: String="pfa12"
+    val tableID: Int=1
+    private var dbHandler: DatabaseHelper? = null
     override fun onClick(p0: View) {
 
 
@@ -53,9 +57,11 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.commentlayout)
 //        userrecycleviewId
+        dbHandler = DatabaseHelper(this)
         val gridLayoutManager = GridLayoutManager(this,2)
         gridLayoutManager.orientation=GridLayoutManager.VERTICAL
         userrecycleviewId.layoutManager=gridLayoutManager
+
         val userData= listOf<User>(User("1","navneet",true,23,"AI is the best","5","1_1"),
                 User("2","shunya1",false,24,"Serverless is the best","5","1_2"),
                 User("3","dhaval",false,24,"Serverless is the best","5","1_2"),
@@ -77,7 +83,7 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
         val apiController = APIController(service)
 //        https://hudson-server.herokuapp.com/hudson/user/pfa12
 
-        val path = "user/pfa12"
+        val path = "$userID/pfa12"
 //        val path = "comments/pfa12"
         val params = JSONObject()
 ////        foo1=bar1&foo2=bar2
@@ -86,7 +92,7 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
 //
         apiController.getJsonObject(path, params) { response ->
 //            // Parse the result
-//
+
 ////            progressDialog = ProgressDialog(this)
 ////            progressDialog.show()
 ////            val request = StringRequest(HttpConstants.BASE_URL, Listener<String> {
@@ -100,10 +106,10 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
 ////                progressDialog.dismiss()
 //
 //
-            Log.d("final response", "/post request OK! Response: $response")
+            Log.d("finalobject response", "/post request OK! Response: $response")
         }
 
-    val path1 = "comments/pfa12"
+    val path1 = "comments/$userID"
     val params1 = JSONArray()
         apiController.getJsonArray(path1, params1) { response ->
                         // Parse the result
@@ -121,8 +127,51 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
 //                progressDialog.dismiss()
 
 
-            Log.d("final response", "/post request OK! Response: $response")
+            Log.d("finaljsonarray response", "/post request OK! Response: $response")
         }
+
+        val path2 = "users/$tableID"
+        val params2 = JSONArray()
+        apiController.getJsonArray(path1, params1) { response ->
+            // Parse the result
+
+//            progressDialog = ProgressDialog(this)
+//            progressDialog.show()
+//            val request = StringRequest(HttpConstants.BASE_URL, Listener<String> {
+//                response ->
+//                var movieModel = Gson().fromJson(response, MovieModel::class.java)
+//                var movieList: List<MovieModel.ResultsEntity> = movieModel.results!!
+//// for (item: MovieModel.ResultsEntity in movieList) {
+//// println(item.original_title)
+//// }
+//                setAdapter(movieList);
+//                progressDialog.dismiss()
+
+
+            Log.d("finaltable response", "/post request OK! Response: $response")
+        }
+
+
+
+
+
+
+
+        var success: Boolean = false
+        success = dbHandler!!.addUser(userID)
+
+        if (success){
+            val toast = Toast.makeText(this,"Saved Successfully", Toast.LENGTH_LONG).show()
+        }
+        else
+        {
+            val toast = Toast.makeText(this,"already present ", Toast.LENGTH_LONG).show()
+        }
+
+
+        var user = dbHandler!!.getUsers()
+        Toast.makeText(this,user, Toast.LENGTH_LONG).show()
+
 
 
 
