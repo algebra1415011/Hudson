@@ -21,7 +21,7 @@ import buybooks.com.hudson.volley.ServiceVolley
 
 import kotlinx.android.synthetic.main.activity_user_comment.*
 import kotlinx.android.synthetic.main.content_user_comment.view.*
-import kotlinx.android.synthetic.main.gdmodel_layout.view.*
+
 import org.json.JSONArray
 
 class UserCommentActivity : AppCompatActivity(), View.OnClickListener {
