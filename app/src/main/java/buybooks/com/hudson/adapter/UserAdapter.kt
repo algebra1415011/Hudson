@@ -32,8 +32,8 @@ class UserAdapter(val context: Context, val userData: List<User>,var clickListen
     inner class UserViewholder(itemView:View) : RecyclerView.ViewHolder(itemView)
     {
         fun setData(user: User, position: Int) {
-            itemView.username.setText(user!!.name)
-            val id: Int= context.getResources().getIdentifier(user.name, "drawable", context.getPackageName())
+            itemView.username.setText(userData[position].name)
+            val id: Int= context.getResources().getIdentifier(userData[position].name, "drawable", context.getPackageName())
             itemView.userimg.setImageResource(id)
             itemView.userimg.setTag(user.name)
         }

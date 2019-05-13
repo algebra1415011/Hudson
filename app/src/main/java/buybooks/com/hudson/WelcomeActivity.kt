@@ -58,40 +58,25 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
         setContentView(R.layout.commentlayout)
 //        userrecycleviewId
         dbHandler = DatabaseHelper(this)
-        val gridLayoutManager = GridLayoutManager(this,2)
-        gridLayoutManager.orientation=GridLayoutManager.VERTICAL
-        userrecycleviewId.layoutManager=gridLayoutManager
-
-        val userData= listOf<User>(User("1","navneet",true,23,"AI is the best","5","1_1"),
-                User("2","shunya1",false,24,"Serverless is the best","5","1_2"),
-                User("3","dhaval",false,24,"Serverless is the best","5","1_2"),
-                User("4","nishi",false,24,"Serverless is the best","5","1_2"),
-                User("5","vikrant",false,24,"Serverless is the best","5","1_2"),
-                User("6","bhawna",false,24,"Serverless is the best","5","1_2"),
-                User("7","anjali",false,24,"Serverless is the best","5","1_2"),
-                User("8","rajen",false,24,"Serverless is the best","5","1_2"),
-                User("9","venky",false,24,"Serverless is the best","5","1_2"))
-        val userAdapter = UserAdapter(this,userData,this@WelcomeActivity)
-        userrecycleviewId.adapter = userAdapter
-        submitidea.setOnClickListener{
-            val intent= Intent(this,UserIdeaActivity::class.java)
-
-            startActivity(intent)
-        }
 
         val service = ServiceVolley()
         val apiController = APIController(service)
-//        https://hudson-server.herokuapp.com/hudson/user/pfa12
+        var success: Boolean = false
+        success = dbHandler!!.addUser(userID)
 
-        val path = "$userID/pfa12"
+        if (success){
+            val toast = Toast.makeText(this,"Saved Successfully", Toast.LENGTH_LONG).show()
+        }
+        else
+        {
+            val toast = Toast.makeText(this,"already present ", Toast.LENGTH_LONG).show()
+        }
+
+        val path = "user/pfa12"
 //        val path = "comments/pfa12"
         val params = JSONObject()
-////        foo1=bar1&foo2=bar2
-////        params.put("userID", "pfa12")
-////        params.put("foo2", "bar2")
-//
         apiController.getJsonObject(path, params) { response ->
-//            // Parse the result
+            //            // Parse the result
 
 ////            progressDialog = ProgressDialog(this)
 ////            progressDialog.show()
@@ -106,33 +91,34 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
 ////                progressDialog.dismiss()
 //
 //
-            Log.d("finalobject response", "/post request OK! Response: $response")
+            usernamelocal.setText(response!!.getString("name"))
+            localtableno.setText("TABLE NO: "+response.getInt("tableID").toString())
+
+            if (response != null) {
+                Log.d("finalobject response", "/post request OK! Response: $response"+response.getString("name"))
+            }
         }
 
-    val path1 = "comments/$userID"
-    val params1 = JSONArray()
-        apiController.getJsonArray(path1, params1) { response ->
-                        // Parse the result
-
-//            progressDialog = ProgressDialog(this)
-//            progressDialog.show()
-//            val request = StringRequest(HttpConstants.BASE_URL, Listener<String> {
-//                response ->
-//                var movieModel = Gson().fromJson(response, MovieModel::class.java)
-//                var movieList: List<MovieModel.ResultsEntity> = movieModel.results!!
-//// for (item: MovieModel.ResultsEntity in movieList) {
-//// println(item.original_title)
-//// }
-//                setAdapter(movieList);
-//                progressDialog.dismiss()
 
 
-            Log.d("finaljsonarray response", "/post request OK! Response: $response")
-        }
+
+
+
+
+
+
+
+        val gridLayoutManager = GridLayoutManager(this,2)
+        gridLayoutManager.orientation=GridLayoutManager.VERTICAL
+        userrecycleviewId.layoutManager=gridLayoutManager
+
+        //for users for table
+
 
         val path2 = "users/$tableID"
         val params2 = JSONArray()
-        apiController.getJsonArray(path1, params1) { response ->
+        val userData = ArrayList<User>()
+        apiController.getJsonArray(path2, params2) { response ->
             // Parse the result
 
 //            progressDialog = ProgressDialog(this)
@@ -146,31 +132,57 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
 //// }
 //                setAdapter(movieList);
 //                progressDialog.dismiss()
+            var localuser = dbHandler!!.getUsers()
+            Toast.makeText(this,localuser, Toast.LENGTH_LONG).show()
 
+            for (i in 0..(response!!.length() - 1)) {
+                val user = response.getJSONObject(i)
+                if(user.getString("name")!=localuser)
+                    userData.add(User(user.getString("userID"),user.getString("name"),user.getBoolean("isLeader"),user.getInt("tableID"),user.getString("idea"),user.getString("rating"),user.getString("ideaRateCount")))
 
+                // Your code here
+                Log.d("finaltable response $i", "/post request OK! Response: $user "+userData.size.toString())
+
+            }
+            Log.d("usersize", userData.size.toString())
+            val userAdapter = UserAdapter(this,userData,this@WelcomeActivity)
+            userrecycleviewId.adapter = userAdapter
             Log.d("finaltable response", "/post request OK! Response: $response")
         }
 
 
+//        val userData= listOf<User>(User("1","navneet",true,23,"AI is the best","5","1_1"),
+//                User("2","shunya1",false,24,"Serverless is the best","5","1_2"),
+//                User("3","dhaval",false,24,"Serverless is the best","5","1_2"),
+//                User("4","nishi",false,24,"Serverless is the best","5","1_2"),
+//                User("5","vikrant",false,24,"Serverless is the best","5","1_2"),
+//                User("6","bhawna",false,24,"Serverless is the best","5","1_2"),
+//                User("7","anjali",false,24,"Serverless is the best","5","1_2"),
+//                User("8","rajen",false,24,"Serverless is the best","5","1_2"),
+//                User("9","venky",false,24,"Serverless is the best","5","1_2"))
 
+        submitidea.setOnClickListener{
+            val intent= Intent(this,UserIdeaActivity::class.java)
 
-
-
-
-        var success: Boolean = false
-        success = dbHandler!!.addUser(userID)
-
-        if (success){
-            val toast = Toast.makeText(this,"Saved Successfully", Toast.LENGTH_LONG).show()
+            startActivity(intent)
         }
-        else
-        {
-            val toast = Toast.makeText(this,"already present ", Toast.LENGTH_LONG).show()
-        }
 
 
-        var user = dbHandler!!.getUsers()
-        Toast.makeText(this,user, Toast.LENGTH_LONG).show()
+//        https://hudson-server.herokuapp.com/hudson/user/pfa12
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

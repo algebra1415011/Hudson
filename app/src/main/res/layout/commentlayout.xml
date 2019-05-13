@@ -17,27 +17,26 @@
         android:scaleType="centerCrop" />
 
     <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
+        android:id="@+id/usernamelocal"
+        android:layout_width="114dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+
         android:layout_alignParentTop="true"
-        android:layout_marginEnd="24dp"
+        android:layout_marginStart="44dp"
         android:layout_marginTop="20dp"
-        android:text="Dhaval Panjwani"
+        android:layout_toEndOf="@+id/profile"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/table"
+        android:id="@+id/localtableno"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/name"
+        android:layout_below="@+id/usernamelocal"
         android:layout_marginEnd="33dp"
-        android:text="Table No: 22"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -81,7 +80,7 @@
             android:background="@android:drawable/alert_light_frame"
             android:text="Submit Idea"
             android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
     </RelativeLayout>
 
 
