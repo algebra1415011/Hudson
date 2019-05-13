@@ -28,12 +28,16 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
     override fun onClick(p0: View) {
 
 
-
+//        <!--grey #D3D3D3-->
+//        <!--green #008000-->
         when (p0.getId()) {
             R.id.username ->{
                 Toast.makeText(getApplicationContext(),p0.username.text,Toast.LENGTH_SHORT).show();
+
                 val intent= Intent(this,UserCommentActivity::class.java)
-                intent.putExtra("usercommentimg", p0.username.text.toString())
+                var localuser = dbHandler!!.getUsers()
+//        Toast.makeText(this,localuser, Toast.LENGTH_LONG).show()
+                intent.putExtra("usercommentimg", localuser.toString())
                 startActivity(intent)
 
             }
@@ -41,7 +45,10 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
             R.id.userimg ->{
                 Toast.makeText(getApplicationContext(),p0.userimg.getTag().toString(),Toast.LENGTH_SHORT).show();
                 val intent= Intent(this, UserCommentActivity::class.java)
-                intent.putExtra("usercommentimg", p0.userimg.getTag().toString())
+                var localuser = dbHandler!!.getUsers()
+//        Toast.makeText(this,localuser, Toast.LENGTH_LONG).show()
+                intent.putExtra("usercommentimg", localuser.toString())
+
                 startActivity(intent)
 
 
@@ -137,7 +144,7 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
 
             for (i in 0..(response!!.length() - 1)) {
                 val user = response.getJSONObject(i)
-                if(user.getString("name")!=localuser)
+                if(!user.getString("userID").equals(localuser))
                     userData.add(User(user.getString("userID"),user.getString("name"),user.getBoolean("isLeader"),user.getInt("tableID"),user.getString("idea"),user.getString("rating"),user.getString("ideaRateCount")))
 
                 // Your code here

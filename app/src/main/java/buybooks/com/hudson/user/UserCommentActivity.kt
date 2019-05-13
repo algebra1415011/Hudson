@@ -68,9 +68,9 @@ class UserCommentActivity : AppCompatActivity(), View.OnClickListener {
 
         val service = ServiceVolley()
         val apiController = APIController(service)
-        var localuser = dbHandler!!.getUsers()
-        Toast.makeText(this,localuser, Toast.LENGTH_LONG).show()
-        val path1 = "comments/$localuser"
+//        var localuser = dbHandler!!.getUsers()
+//        Toast.makeText(this,localuser, Toast.LENGTH_LONG).show()
+        val path1 = "comments/$usercommentname"
         val params1 = JSONArray()
         val commentData = ArrayList<Comment>()
 

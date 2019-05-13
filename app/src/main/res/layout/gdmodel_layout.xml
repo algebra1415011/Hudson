@@ -40,6 +40,9 @@ android:orientation="vertical">
             app:layout_constraintStart_toStartOf="parent" />
 
 
+        <!--grey #D3D3D3-->
+        <!--green #008000-->
+<!--yellow #FFFF00-->
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
 
             android:id="@+id/profile"
@@ -49,7 +52,7 @@ android:orientation="vertical">
             android:layout_alignParentTop="true"
             android:layout_margin="15dp"
             android:layout_marginBottom="2dp"
-            android:background="#008000"
+            android:background="#D3D3D3"
             android:clickable="true"
             android:elevation="5dp"
             android:padding="20dp"
