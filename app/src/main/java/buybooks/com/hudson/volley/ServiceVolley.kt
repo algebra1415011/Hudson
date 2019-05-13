@@ -18,7 +18,7 @@ class ServiceVolley : ServiceInterface {
         val jsonArrayRequest = object : JsonArrayRequest(Method.GET, basePath + path, params,
                 Response.Listener<JSONArray> { response ->
                     Log.d(TAG, "/post request OK! Response: $response")
-                    completionHandler(response) 
+                    completionHandler(response)
                 },
                 Response.ErrorListener { error ->
                     VolleyLog.e(TAG, "/post request fail! Error: ${error.message}")
@@ -27,7 +27,7 @@ class ServiceVolley : ServiceInterface {
             @Throws(AuthFailureError::class)
             override fun getHeaders(): Map<String, String> {
                 val headers = HashMap<String, String>()
-//                headers.put("Content-Type", "application/json")
+//                headers.put("Content-Type", "appli cation/json")
                 return headers
             }
         }
