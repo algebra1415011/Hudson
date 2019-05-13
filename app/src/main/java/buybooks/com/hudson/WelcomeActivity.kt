@@ -145,7 +145,9 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
             for (i in 0..(response!!.length() - 1)) {
                 val user = response.getJSONObject(i)
                 if(!user.getString("userID").equals(localuser))
+                {
                     userData.add(User(user.getString("userID"),user.getString("name"),user.getBoolean("isLeader"),user.getInt("tableID"),user.getString("idea"),user.getString("rating"),user.getString("ideaRateCount")))
+                }
 
                 // Your code here
                 Log.d("finaltable response $i", "/post request OK! Response: $user "+userData.size.toString())

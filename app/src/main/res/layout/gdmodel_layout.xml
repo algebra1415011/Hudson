@@ -45,7 +45,7 @@ android:orientation="vertical">
 <!--yellow #FFFF00-->
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
 
-            android:id="@+id/profile"
+            android:id="@+id/indicator"
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:layout_alignParentRight="true"

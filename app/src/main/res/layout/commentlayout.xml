@@ -24,7 +24,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="44dp"
         android:layout_marginTop="20dp"
-        android:layout_toEndOf="@+id/profile"
+        android:layout_toEndOf="@+id/indicator"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -43,7 +43,7 @@
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
 
-        android:id="@+id/profile"
+        android:id="@+id/indicator"
         android:layout_width="193dp"
         android:layout_height="192dp"
 
