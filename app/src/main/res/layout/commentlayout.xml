@@ -97,4 +97,36 @@
                     android:layout_below="@+id/profile_layout"
                     android:layout_marginBottom="0dp"
                     android:scrollbars="vertical" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:gravity="bottom">
+
+        <Button
+            android:id="@+id/topidea"
+            android:layout_width="155dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@android:drawable/alert_light_frame"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="25dp"
+            android:text="Top Idea" />
+
+        <Button
+            android:id="@+id/checkandview"
+            android:layout_width="155dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="0dp"
+            android:layout_marginStart="24dp"
+            android:background="@android:drawable/alert_light_frame"
+            android:text="Check and View" />
+
+
+    </RelativeLayout>
 </RelativeLayout>
