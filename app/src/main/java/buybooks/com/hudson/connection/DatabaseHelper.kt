@@ -44,15 +44,15 @@ internal class DatabaseHelper(context: Context) :
             if (cursor.moveToFirst()) {
 //                do {
                     userID = cursor.getString(cursor.getColumnIndex(USERID))
-
+                    cursor.close()
+                    db.close()
+                    return userID
 
 //                    allUser = "$allUser\n$userID"
 //                } while (cursor.moveToNext())
             }
         }
-        cursor.close()
-        db.close()
-        return userID
+        return "empty"
     }
 
 

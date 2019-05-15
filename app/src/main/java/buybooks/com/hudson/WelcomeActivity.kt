@@ -67,17 +67,6 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
 
         val service = ServiceVolley()
         val apiController = APIController(service)
-        var success: Boolean = false
-        success = dbHandler!!.addUser(userID)
-
-        if (success){
-            val toast = Toast.makeText(this,"Saved Successfully", Toast.LENGTH_LONG).show()
-        }
-        else
-        {
-            val toast = Toast.makeText(this,"already present ", Toast.LENGTH_LONG).show()
-        }
-
         val path = "user/pfa12"
 //        val path = "comments/pfa12"
         val params = JSONObject()
@@ -104,15 +93,6 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
                 Log.d("finalobject response", "/post request OK! Response: $response"+response.getString("name"))
             }
         }
-
-
-
-
-
-
-
-
-
 
         val gridLayoutManager = GridLayoutManager(this,2)
         gridLayoutManager.orientation=GridLayoutManager.VERTICAL
@@ -145,7 +125,7 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
                 val user = response.getJSONObject(i)
                 if(!user.getString("userID").equals(localuser))
                 {
-                    userData.add(User(user.getString("userID"),user.getString("name"),user.getBoolean("isLeader"),user.getInt("tableID"),user.getString("idea"),user.getString("rating"),user.getString("ideaRateCount")))
+                    userData.add(User(user.getString("userID"),user.getString("name"),user.getBoolean("isLeader"),user.getInt("tableID"),user.getString("idea"),user.getInt("rating"),user.getInt("ideaRateCount")))
                 }
 
                 // Your code here
@@ -158,17 +138,6 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
             Log.d("finaltable response", "/post request OK! Response: $response")
         }
 
-
-//        val userData= listOf<User>(User("1","navneet",true,23,"AI is the best","5","1_1"),
-//                User("2","shunya1",false,24,"Serverless is the best","5","1_2"),
-//                User("3","dhaval",false,24,"Serverless is the best","5","1_2"),
-//                User("4","nishi",false,24,"Serverless is the best","5","1_2"),
-//                User("5","vikrant",false,24,"Serverless is the best","5","1_2"),
-//                User("6","bhawna",false,24,"Serverless is the best","5","1_2"),
-//                User("7","anjali",false,24,"Serverless is the best","5","1_2"),
-//                User("8","rajen",false,24,"Serverless is the best","5","1_2"),
-//                User("9","venky",false,24,"Serverless is the best","5","1_2"))
-
         submitidea.setOnClickListener{
             val intent= Intent(this,UserIdeaActivity::class.java)
 
@@ -177,27 +146,6 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
 
 
 //        https://hudson-server.herokuapp.com/hudson/user/pfa12
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     }

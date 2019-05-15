@@ -10,10 +10,11 @@ class APIController constructor(serviceInjection: ServiceInterface): ServiceInte
         service.getJsonArray(path, params, completionHandler)
     }
 
-
-
-
     private val service: ServiceInterface = serviceInjection
+
+    override fun put(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
+        service.put(path, params, completionHandler)
+    }
 
     override fun getJsonObject(path: String, params: JSONObject, completionHandler: (response: JSONObject?) -> Unit) {
         service.getJsonObject(path, params, completionHandler)
