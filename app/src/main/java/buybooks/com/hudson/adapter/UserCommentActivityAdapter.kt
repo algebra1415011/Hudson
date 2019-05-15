@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import buybooks.com.hudson.R
 import buybooks.com.hudson.model.Comment
-import buybooks.com.hudson.model.User
 import kotlinx.android.synthetic.main.content_user_comment.view.*
 
 class UserCommentActivityAdapter(val context: Context, val commentData: List<Comment>, var clickListener: View.OnClickListener?): RecyclerView.Adapter<UserCommentActivityAdapter.UserCommentActivityViewholder>()
@@ -35,15 +34,15 @@ class UserCommentActivityAdapter(val context: Context, val commentData: List<Com
             itemView.usercommentidea.setText(comment.comment)
             itemView.usercommentidea.movementMethod = ScrollingMovementMethod();
             val id: Int= context.getResources().getIdentifier(comment.commentorID, "drawable", context.getPackageName())
-            itemView.usercomimg.setImageResource(id)
-            itemView.usercomimg.setTag(comment.commentorID)
+            itemView.usertopimg.setImageResource(id)
+            itemView.usertopimg.setTag(comment.commentorID)
 
         }
 
         init {
             if (clickListener != null) {
                 itemView.setOnClickListener(clickListener)
-                itemView.usercomimg.setOnClickListener(clickListener)
+                itemView.usertopimg.setOnClickListener(clickListener)
                 itemView.usercommentidea.setOnClickListener(clickListener)
             }
         }

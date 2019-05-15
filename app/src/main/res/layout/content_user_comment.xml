@@ -9,7 +9,7 @@
     android:padding="16dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/usercomimg"
+        android:id="@+id/usertopimg"
         android:layout_width="95dp"
         android:layout_height="98dp"
        android:layout_marginRight="10dp"
@@ -20,8 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_height="98dp"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/usercomimg"
-        android:layout_toRightOf="@+id/usercomimg"
+        android:layout_toEndOf="@+id/usertopimg"
+        android:layout_toRightOf="@+id/usertopimg"
         android:scrollbars="vertical"
         android:text="Artificial intelligence (AI) is the simulation of human intelligence processes by machines, especially computer systems."
         android:textColor="@android:color/black"

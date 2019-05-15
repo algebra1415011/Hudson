@@ -23,13 +23,10 @@ import org.json.JSONObject
 class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
 
     val userID: String="pfa12"
-    val tableID: Int=1
+    var tableID: Int=1
     private var dbHandler: DatabaseHelper? = null
     override fun onClick(p0: View) {
 
-
-//        <!--grey #D3D3D3-->
-//        <!--green #008000-->
         when (p0.getId()) {
             R.id.username ->{
                 Toast.makeText(getApplicationContext(),p0.username.text,Toast.LENGTH_SHORT).show();
@@ -65,19 +62,12 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
 //        userrecycleviewId
         dbHandler = DatabaseHelper(this)
 
+
+
+
         val service = ServiceVolley()
+        var tableID: Int
         val apiController = APIController(service)
-        var success: Boolean = false
-        success = dbHandler!!.addUser(userID)
-
-        if (success){
-            val toast = Toast.makeText(this,"Saved Successfully", Toast.LENGTH_LONG).show()
-        }
-        else
-        {
-            val toast = Toast.makeText(this,"already present ", Toast.LENGTH_LONG).show()
-        }
-
         val path = "user/pfa12"
 //        val path = "comments/pfa12"
         val params = JSONObject()
@@ -99,20 +89,12 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
 //
             usernamelocal.setText(response!!.getString("name"))
             localtableno.setText("TABLE NO: "+response.getInt("tableID").toString())
+//            tableID=response.getInt("tableID")
 
             if (response != null) {
                 Log.d("finalobject response", "/post request OK! Response: $response"+response.getString("name"))
             }
         }
-
-
-
-
-
-
-
-
-
 
         val gridLayoutManager = GridLayoutManager(this,2)
         gridLayoutManager.orientation=GridLayoutManager.VERTICAL
@@ -121,7 +103,8 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
         //for users for table
 
 
-        val path2 = "users/$tableID"
+        val path2 = "users/$this.tableID"
+        Log.d("tableid", "/post request OK! Response: $this.tableID")
         val params2 = JSONArray()
         val userData = ArrayList<User>()
         apiController.getJsonArray(path2, params2) { response ->
@@ -145,7 +128,8 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
                 val user = response.getJSONObject(i)
                 if(!user.getString("userID").equals(localuser))
                 {
-                    userData.add(User(user.getString("userID"),user.getString("name"),user.getBoolean("isLeader"),user.getInt("tableID"),user.getString("idea"),user.getString("rating"),user.getString("ideaRateCount")))
+                    userData.add(User(user.getString("userID"),user.getString("name"),user.getBoolean("isLeader"),user.getInt("tableID"),user.getString("idea"),user.getInt("rating"),user.getInt("ideaRateCount")))
+
                 }
 
                 // Your code here
@@ -158,46 +142,47 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
             Log.d("finaltable response", "/post request OK! Response: $response")
         }
 
+        val path3 = "check/pfa12"
+//        val path = "comments/pfa12"
+        val params3 = JSONObject()
+        apiController.getJsonObject(path3, params3) { response ->
 
-//        val userData= listOf<User>(User("1","navneet",true,23,"AI is the best","5","1_1"),
-//                User("2","shunya1",false,24,"Serverless is the best","5","1_2"),
-//                User("3","dhaval",false,24,"Serverless is the best","5","1_2"),
-//                User("4","nishi",false,24,"Serverless is the best","5","1_2"),
-//                User("5","vikrant",false,24,"Serverless is the best","5","1_2"),
-//                User("6","bhawna",false,24,"Serverless is the best","5","1_2"),
-//                User("7","anjali",false,24,"Serverless is the best","5","1_2"),
-//                User("8","rajen",false,24,"Serverless is the best","5","1_2"),
-//                User("9","venky",false,24,"Serverless is the best","5","1_2"))
+            if (response != null) {
+                if(response.getBoolean("result"))
+                    checkandview.isEnabled=true
+                    checkandview.visibility=View.VISIBLE
+            }
+
+            if (response != null) {
+                Log.d("topidea response", "/post request OK! Response: $response"+response.getString("result"))
+            }
+        }
+
+        topidea.setOnClickListener{
+            val intent= Intent(this, TopideaActivity::class.java)
+//        Toast.makeText(this,localuser, Toast.LENGTH_LONG).show()
+            startActivity(intent)
+
+
+        }
+
+        checkandview.setOnClickListener{
+            val intent= Intent(this, ConfirmIdeaActivity::class.java)
+//        Toast.makeText(this,localuser, Toast.LENGTH_LONG).show()
+
+            intent.putExtra("tableID", this.tableID.toString())
+            startActivity(intent)
+
+        }
 
         submitidea.setOnClickListener{
             val intent= Intent(this,UserIdeaActivity::class.java)
-
+            intent.putExtra("tableID", this.tableID.toString())
             startActivity(intent)
         }
 
 
 //        https://hudson-server.herokuapp.com/hudson/user/pfa12
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     }

@@ -2,7 +2,6 @@ package buybooks.com.hudson.user
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.text.method.ScrollingMovementMethod
@@ -16,7 +15,6 @@ import buybooks.com.hudson.adapter.UserCommentActivityAdapter
 import buybooks.com.hudson.connection.DatabaseHelper
 import buybooks.com.hudson.controller.APIController
 import buybooks.com.hudson.model.Comment
-import buybooks.com.hudson.model.User
 import buybooks.com.hudson.volley.ServiceVolley
 
 import kotlinx.android.synthetic.main.activity_user_comment.*
@@ -39,7 +37,7 @@ class UserCommentActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             R.id.userimg ->{
-                Toast.makeText(getApplicationContext(),p0.usercomimg.getTag().toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),p0.usertopimg.getTag().toString(), Toast.LENGTH_SHORT).show();
 //                val intent= Intent(this, UserCommentActivity::class.java)
 //                intent.putExtra("usercommentimg", p0.usercomimg.getTag().toString())
 //                startActivity(intent)
@@ -59,7 +57,7 @@ class UserCommentActivity : AppCompatActivity(), View.OnClickListener {
         dbHandler = DatabaseHelper(this)
         var usercommentname:String =intent.getStringExtra("usercommentimg")
         val id: Int= this.resources.getIdentifier(usercommentname, "drawable", this.packageName)
-        usercomimg.setImageResource(id)
+        usertopimg.setImageResource(id)
         useridea.movementMethod = ScrollingMovementMethod();
 
 
@@ -114,6 +112,7 @@ class UserCommentActivity : AppCompatActivity(), View.OnClickListener {
         //rating button
 
         ratingbt.setOnClickListener{
+            
             dbHandler = DatabaseHelper(this)
             var isRated = dbHandler!!.addRating(intent.getStringExtra("usercommentimg"),"true")
             Toast.makeText(this,"rating is added"+isRated.toString(), Toast.LENGTH_LONG).show()
@@ -123,21 +122,6 @@ class UserCommentActivity : AppCompatActivity(), View.OnClickListener {
 
             startActivity(intent)
         }
-
-//        userrecycleviewId
-
-
-//        val userData= listOf<User>(User("1","navneet",true,23,"AI is the best","5","1_1"),
-//                User("2","shunya1",false,24,"Serverless is the best","5","1_2"),
-//                User("3","dhaval",false,24,"Serverless is the best","5","1_2"),
-//                User("4","nishi",false,24,"Serverless is the best","5","1_2"),
-//                User("5","vikrant",false,24,"Serverless is the best","5","1_2"),
-//                User("6","bhawna",false,24,"Serverless is the best","5","1_2"),
-//                User("7","anjali",false,24,"Serverless is the best","5","1_2"),
-//                User("8","rajen",false,24,"Serverless is the best","5","1_2"),
-//                User("9","venky",false,24,"Serverless is the best","5","1_2"))
-
-
 
 
     }
