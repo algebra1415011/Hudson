@@ -1,5 +1,6 @@
 package buybooks.com.hudson.volley
 
+import android.net.Uri
 import android.util.Log
 import buybooks.com.hudson.ServiceInterface
 import buybooks.com.hudson.singleton.BackendVolley
@@ -12,6 +13,42 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 class ServiceVolley : ServiceInterface {
+    override fun postJsonObject(path: String, params: JSONArray, completionHandler: JSONArray?.() -> Unit) {
+
+        val jsonArrayRequest = object : JsonArrayRequest(Method.POST, basePath + path, params,
+                Response.Listener<JSONArray> { response ->
+                    Log.d(TAG, "/post request OK! Response: $response")
+                    completionHandler(response)
+                },
+                Response.ErrorListener { error ->
+                    VolleyLog.e(TAG, "/post request fail! Error: ${error.message}")
+                    completionHandler(null)
+                }) {
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                val headers = HashMap<String, String>()
+//                headers.put("Content-Type", "appli cation/json")
+                return headers
+            }
+
+            override fun getParams(): MutableMap<String, String> {
+                val params :Map<String,String>  = HashMap<String, String>();
+
+//                params.put("userId",userAccount.getUsername());
+//                params.put("pass",userAccount.getPassword());
+//                params.put("comment", Uri.encode(comment));
+//                params.put("comment_post_ID",String.valueOf(postId));
+//                params.put("blogId",String.valueOf(blogId));
+//
+//                return params;
+            }
+        }
+
+
+
+        BackendVolley.instance?.addToRequestQueue(jsonArrayRequest, TAG)
+
+    }
 
 
     override fun getJsonArray(path: String, params: JSONArray, completionHandler: JSONArray?.() -> Unit) {
