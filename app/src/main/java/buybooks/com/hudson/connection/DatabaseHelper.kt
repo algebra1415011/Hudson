@@ -14,8 +14,14 @@ internal class DatabaseHelper(context: Context) :
                 "($USERID TEXT PRIMARY KEY);"
         val CREATE_TABLE1 = "CREATE TABLE $TABLE_NAME1 " +
                 "($USERID TEXT PRIMARY KEY,$ISRATED TEXT NOT NULL);"
+        val CREATE_TABLE2 = "CREATE TABLE $TABLE_NAME2 " +
+                "($TABLEID INT PRIMARY KEY);"
+        val CREATE_TABLE3 = "CREATE TABLE $TABLE_NAME3 " +
+                "($USERID TEXT PRIMARY KEY,$COLOR TEXT NOT NULL);"
         db!!.execSQL(CREATE_TABLE)
         db!!.execSQL(CREATE_TABLE1)
+        db!!.execSQL(CREATE_TABLE2)
+        db!!.execSQL(CREATE_TABLE3)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -43,10 +49,10 @@ internal class DatabaseHelper(context: Context) :
         if (cursor != null) {
             if (cursor.moveToFirst()) {
 //                do {
-                    userID = cursor.getString(cursor.getColumnIndex(USERID))
-                    cursor.close()
-                    db.close()
-                    return userID
+                userID = cursor.getString(cursor.getColumnIndex(USERID))
+                cursor.close()
+                db.close()
+                return userID
 
 //                    allUser = "$allUser\n$userID"
 //                } while (cursor.moveToNext())
@@ -95,7 +101,71 @@ internal class DatabaseHelper(context: Context) :
         return "false"
     }
 
+    fun addtableID(tableID: Int): Boolean {
+        //Create and/or open a database that will be used for reading and writing.
+        val db = this.writableDatabase
+        val values = ContentValues()
+        values.put(TABLEID, tableID)
+        val _success = db.insert(TABLE_NAME2, null, values)
+        db.close()
+        Log.v("insertedtableID", "$_success")
+        return Integer.parseInt("$_success") != -1
+    }
 
+    //get all users
+    fun gettableId(): Int {
+
+        val db = readableDatabase
+        val selectALLQuery = "SELECT * FROM $TABLE_NAME2"
+        val cursor = db.rawQuery(selectALLQuery, null)
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+//                do {
+                var tableID:Int = cursor.getInt(cursor.getColumnIndex(TABLEID))
+                cursor.close()
+                db.close()
+                return tableID
+
+//                    allUser = "$allUser\n$userID"
+//                } while (cursor.moveToNext())
+            }
+        }
+        return 0
+    }
+
+
+    fun addcolor(userID: String,color:String): Boolean {
+        //Create and/or open a database that will be used for reading and writing.
+        val db = this.writableDatabase
+        val values = ContentValues()
+        values.put(USERID, userID)
+        values.put(COLOR, color)
+        val _success = db.insert(TABLE_NAME3, null, values)
+        db.close()
+        Log.v("colorinsertid", "$_success")
+        return Integer.parseInt("$_success") != -1
+    }
+
+    //get all users
+    fun getcolor(): String {
+
+        val db = readableDatabase
+        val selectALLQuery = "SELECT * FROM $TABLE_NAME3"
+        val cursor = db.rawQuery(selectALLQuery, null)
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+//                do {
+                var color:String = cursor.getString(cursor.getColumnIndex(COLOR))
+                cursor.close()
+                db.close()
+                return color
+
+//                    allUser = "$allUser\n$userID"
+//                } while (cursor.moveToNext())
+            }
+        }
+        return "empty"
+    }
 
 
 
@@ -104,8 +174,13 @@ internal class DatabaseHelper(context: Context) :
         private val DB_VERSIOM = 1;
         private val TABLE_NAME = "user"
         private val TABLE_NAME1 = "rating"
+        private val TABLE_NAME2 = "tableid"
+        private val TABLE_NAME3 = "colorid"
         private val USERID = "userID"
         private val ISRATED="isRated"
+        private val TABLEID="tableID"
+        private val COLOR="color"
+
 
 
     }

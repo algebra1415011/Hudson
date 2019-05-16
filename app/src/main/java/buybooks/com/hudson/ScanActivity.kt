@@ -51,21 +51,21 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         if (success){
         apiController.getJsonObject(path1, params1) { response1 ->
 
-                val path2 = "table/${response1?.getJSONObject("tableID")}"
+                val path2 = "table/${response1?.getInt("tableID")}"
                 val params2 = JSONObject()
                 apiController.getJsonObject(path2, params2) { response2 ->
-                    val path3 = "table/${response1?.getJSONObject("tableID")}"
+                    val path3 = "table/${response1?.getInt("tableID")}"
                     val params3 = JSONObject()
-                    params3.put("tableID","${response2?.getJSONObject("tableID")}")
-                    params3.put("topicID","${response2?.getJSONObject("topicID")}")
-                    params3.put("topUserID","${response2?.getJSONObject("topUserID")}")
-                    params3.put("peopleCount","${((response2?.getJSONObject("peopleCount").toString()).toInt())+1}")
-                    params3.put("topUserName","${response2?.getJSONObject("topUserName")}")
-                    params3.put("topUserIdea","${response2?.getJSONObject("topUserIdea")}")
+                    params3.put("tableID","${response2?.getInt("tableID")}")
+                    params3.put("topicID","${response2?.getString("topicID")}")
+                    params3.put("topUserID","${response2?.getString("topUserID")}")
+                    params3.put("peopleCount","${response2!!.getInt("peopleCount")+1}")
+                    params3.put("topUserName","${response2?.getString("topUserName")}")
+                    params3.put("topUserIdea","${response2?.getString("topUserIdea")}")
                     apiController.put(path3,params3) {response3 ->
                         if (response3 != null) {
-                            Log.d("finalobject response", "/put request OK! Response: $response3"+response3.getString("name"))
                             val i = Intent(this@ScanActivity,WelcomeActivity::class.java)
+                            dbHandler!!.addtableID(response2?.getInt("tableID"))
                             startActivity(i)
                             finish()
                         }

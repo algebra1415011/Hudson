@@ -51,6 +51,7 @@ class UserAdapter(val context: Context, val userData: List<User>,var clickListen
             }
             else if(!userData[position].idea.equals("null"))
             {
+                dbHandler!!.addRating(userData[position].userID,"yellow")
                 itemView.indicator.setBackgroundColor(Color.YELLOW)
             }
 

@@ -8,8 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
 import buybooks.com.hudson.R
 import buybooks.com.hudson.ThanksActivity
 import buybooks.com.hudson.adapter.UserCommentActivityAdapter
@@ -23,6 +22,7 @@ import kotlinx.android.synthetic.main.activity_user_comment.*
 import kotlinx.android.synthetic.main.content_user_comment.view.*
 
 import org.json.JSONArray
+import org.json.JSONObject
 
 class UserCommentActivity : AppCompatActivity(), View.OnClickListener {
     private var dbHandler: DatabaseHelper? = null
@@ -53,6 +53,11 @@ class UserCommentActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        finish()
+        startActivity(getIntent())
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_comment)
@@ -61,11 +66,12 @@ class UserCommentActivity : AppCompatActivity(), View.OnClickListener {
         val id: Int= this.resources.getIdentifier(usercommentname, "drawable", this.packageName)
         usercomimg.setImageResource(id)
         useridea.movementMethod = ScrollingMovementMethod();
-
-
-
-
-
+        dbHandler = DatabaseHelper(this)
+        var isRated = dbHandler!!.isRated(usercommentname)
+        if(isRated.equals("true")){
+            (findViewById<RatingBar>(R.id.ratingBar3)).visibility=(View.GONE)
+            (findViewById<Button>(R.id.ratingbt)).visibility=(View.GONE)
+        }
         val service = ServiceVolley()
         val apiController = APIController(service)
 //        var localuser = dbHandler!!.getUsers()
@@ -114,9 +120,32 @@ class UserCommentActivity : AppCompatActivity(), View.OnClickListener {
         //rating button
 
         ratingbt.setOnClickListener{
+            val ratingBar = findViewById<RatingBar>(R.id.ratingBar3)
             dbHandler = DatabaseHelper(this)
             var isRated = dbHandler!!.addRating(intent.getStringExtra("usercommentimg"),"true")
             Toast.makeText(this,"rating is added"+isRated.toString(), Toast.LENGTH_LONG).show()
+            val service = ServiceVolley()
+            val apiController = APIController(service)
+            val path1 = "user/${intent.getStringExtra("usercommentimg")}"
+            val params1 = JSONObject()
+            apiController.getJsonObject(path1, params1) {response1 ->
+                val path2 = "user/${response1?.getString("userID")}"
+                val params2 = JSONObject()
+                params2.put("userID","${response1?.getString("userID")}")
+                params2.put("name","${response1?.getString("name")}")
+                params2.put("isLeader","${response1?.getBoolean("isLeader")}")
+                params2.put("tableID","${response1?.getInt("tableID")}")
+                params2.put("idea","${response1?.getString("idea")}")
+                params2.put("rating","${response1!!.getInt("rating")+ratingBar.rating}")
+                params2.put("ideaRateCount","${response1!!.getInt("ideaRateCount")+1}")
+                apiController.put(path2, params2) { response2 ->
+                    if(response2 != null){
+                        Toast.makeText(this,"Rating submitted to Database", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+
+
             val intent= Intent(this,ThanksActivity::class.java)
             intent.putExtra("activity","ratingact")
 
@@ -124,21 +153,43 @@ class UserCommentActivity : AppCompatActivity(), View.OnClickListener {
             startActivity(intent)
         }
 
-//        userrecycleviewId
+        addcommentbutton.setOnClickListener{
+            val inputComment = findViewById(R.id.addcomment) as EditText
+            val service = ServiceVolley()
+            dbHandler = DatabaseHelper(this)
+            val commentorID = dbHandler!!.getUsers()
+            val apiController = APIController(service)
+            val path1 = "comments/${usercommentname}"
+            val params1 = JSONArray()
+            apiController.getJsonArray(path1, params1) { response1 ->
+                if (response1 != null && response1.length() > 0){
+                val path2 = "comments/${usercommentname}"
+                val params2 = JSONObject()
+                params2.put("commentID","${intent.getStringExtra("usercommentimg")}_${(response1.length()+1)}")
+                params2.put("comment","${inputComment.text}")
+                params2.put("commentorID","${commentorID}")
+                apiController.put(path2,params2){response2 ->
+                    if(response2 != null){
+                        Toast.makeText(this,"Comment submitted to Database", Toast.LENGTH_LONG).show()
+                    }
+                }
 
-
-//        val userData= listOf<User>(User("1","navneet",true,23,"AI is the best","5","1_1"),
-//                User("2","shunya1",false,24,"Serverless is the best","5","1_2"),
-//                User("3","dhaval",false,24,"Serverless is the best","5","1_2"),
-//                User("4","nishi",false,24,"Serverless is the best","5","1_2"),
-//                User("5","vikrant",false,24,"Serverless is the best","5","1_2"),
-//                User("6","bhawna",false,24,"Serverless is the best","5","1_2"),
-//                User("7","anjali",false,24,"Serverless is the best","5","1_2"),
-//                User("8","rajen",false,24,"Serverless is the best","5","1_2"),
-//                User("9","venky",false,24,"Serverless is the best","5","1_2"))
-
-
-
+            }else{
+                    val path2 = "comments/${usercommentname}"
+                    val params2 = JSONObject()
+                    params2.put("commentID","${intent.getStringExtra("usercommentimg")}_1")
+                    params2.put("comment","${inputComment.text}")
+                    params2.put("commentorID","${commentorID}")
+                    apiController.put(path2,params2){response2 ->
+                        if(response2 != null){
+                            Toast.makeText(this,"Comment submitted to Database", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+                startActivity(getIntent())
+                finish()
+            }
+        }
 
     }
 

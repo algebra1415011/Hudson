@@ -22,33 +22,47 @@ import org.json.JSONObject
 
 class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
 
-    val userID: String="pfa12"
-    val tableID: Int=1
+//    tableID
+
     private var dbHandler: DatabaseHelper? = null
     override fun onClick(p0: View) {
 
-
-//        <!--grey #D3D3D3-->
-//        <!--green #008000-->
         when (p0.getId()) {
             R.id.username ->{
-                Toast.makeText(getApplicationContext(),p0.username.text,Toast.LENGTH_SHORT).show();
+                var color = dbHandler!!.getcolor()
+                if(!color.equals("yellow"))
+                {
+                    Toast.makeText(getApplicationContext(),"User has not submitted idea",Toast.LENGTH_SHORT).show()
+                }
+                else
+                {
+                    val intent= Intent(this,UserCommentActivity::class.java)
 
-                val intent= Intent(this,UserCommentActivity::class.java)
-                var localuser = dbHandler!!.getUsers()
-//        Toast.makeText(this,localuser, Toast.LENGTH_LONG).show()
-                intent.putExtra("usercommentimg", p0.username.text.toString())
-                startActivity(intent)
+//                 Toast.makeText(this,localuser, Toast.LENGTH_LONG).show()
+                    intent.putExtra("usercommentimg", p0.username.text.toString())
+                    startActivity(intent)
+
+                }
+
+
+
 
             }
 
             R.id.userimg ->{
-                Toast.makeText(getApplicationContext(),p0.userimg.getTag().toString(),Toast.LENGTH_SHORT).show();
-                val intent= Intent(this, UserCommentActivity::class.java)
-//        Toast.makeText(this,localuser, Toast.LENGTH_LONG).show()
-                intent.putExtra("usercommentimg", p0.userimg.getTag().toString())
+                var color = dbHandler!!.getcolor()
+                if(!color.equals("yellow"))
+                {
+                    Toast.makeText(getApplicationContext(),"User has not submitted idea",Toast.LENGTH_SHORT).show()
+                }
+                else {
 
-                startActivity(intent)
+                    val intent = Intent(this, UserCommentActivity::class.java)
+//        Toast.makeText(this,localuser, Toast.LENGTH_LONG).show()
+                    intent.putExtra("usercommentimg", p0.userimg.getTag().toString())
+
+                    startActivity(intent)
+                }
 
 
             }
@@ -59,15 +73,26 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
 
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        finish()
+        startActivity(getIntent())
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.commentlayout)
 //        userrecycleviewId
         dbHandler = DatabaseHelper(this)
 
+
+
+
         val service = ServiceVolley()
+
         val apiController = APIController(service)
-        val path = "user/pfa12"
+        var localuser = dbHandler!!.getUsers()
+        val path = "user/${localuser}"
 //        val path = "comments/pfa12"
         val params = JSONObject()
         apiController.getJsonObject(path, params) { response ->
@@ -88,6 +113,17 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
 //
             usernamelocal.setText(response!!.getString("name"))
             localtableno.setText("TABLE NO: "+response.getInt("tableID").toString())
+            userimgcomment
+            val id: Int= this.getResources().getIdentifier(response.getString("userID"), "drawable", this.getPackageName())
+            userimgcomment.setImageResource(id)
+
+            if(response.getBoolean("isLeader"))
+                checkandview.visibility = View.VISIBLE
+            if(!response.getString("idea").equals("null"))
+            {
+                submitidea.setText("Your Idea")
+            }
+//            tableID=response.getInt("tableID")
 
             if (response != null) {
                 Log.d("finalobject response", "/post request OK! Response: $response"+response.getString("name"))
@@ -100,8 +136,9 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
 
         //for users for table
 
-
-        val path2 = "users/$tableID"
+        var tabletest= dbHandler!!.gettableId()
+        val path2 = "users/$tabletest"
+        Log.d("tableid", "/post request OK! Response: ${tabletest}")
         val params2 = JSONArray()
         val userData = ArrayList<User>()
         apiController.getJsonArray(path2, params2) { response ->
@@ -118,35 +155,53 @@ class WelcomeActivity : AppCompatActivity(),View.OnClickListener {
 //// }
 //                setAdapter(movieList);
 //                progressDialog.dismiss()
-            var localuser = dbHandler!!.getUsers()
+
             Toast.makeText(this,localuser, Toast.LENGTH_LONG).show()
 
             for (i in 0..(response!!.length() - 1)) {
                 val user = response.getJSONObject(i)
+
                 if(!user.getString("userID").equals(localuser))
                 {
                     userData.add(User(user.getString("userID"),user.getString("name"),user.getBoolean("isLeader"),user.getInt("tableID"),user.getString("idea"),user.getInt("rating"),user.getInt("ideaRateCount")))
                 }
-
                 // Your code here
-                Log.d("finaltable response $i", "/post request OK! Response: $user "+userData.size.toString())
-
+                Log.d("finaltable response $i", "/post request OK! Response: $user "+userData.size.toString()+" "+user.getBoolean("isLeader"))
             }
             Log.d("usersize", userData.size.toString())
             val userAdapter = UserAdapter(this,userData,this@WelcomeActivity)
             userrecycleviewId.adapter = userAdapter
             Log.d("finaltable response", "/post request OK! Response: $response")
         }
+        val path3 = "check/${localuser}"
+//        val path = "comments/pfa12"
+        val params3 = JSONObject()
+        apiController.getJsonObject(path3, params3) { response ->
 
-        submitidea.setOnClickListener{
-            val intent= Intent(this,UserIdeaActivity::class.java)
-
+            if (response != null) {
+                if(response.getBoolean("result"))
+                    checkandview.isEnabled=true
+                checkandview.visibility=View.VISIBLE
+            }
+            if (response != null) {
+                Log.d("topidea response", "/post request OK! Response: $response"+response.getString("result"))
+            }
+        }
+        topidea.setOnClickListener{
+            val intent= Intent(this, TopideaActivity::class.java)
+//        Toast.makeText(this,localuser, Toast.LENGTH_LONG).show()
             startActivity(intent)
         }
-
-
-//        https://hudson-server.herokuapp.com/hudson/user/pfa12
-
-
+        checkandview.setOnClickListener{
+            val intent= Intent(this, ConfirmIdeaActivity::class.java)
+//        Toast.makeText(this,localuser, Toast.LENGTH_LONG).show()
+            intent.putExtra("tableID", tabletest.toString())
+            startActivity(intent)
+        }
+        submitidea.setOnClickListener{
+            val intent= Intent(this,UserIdeaActivity::class.java)
+            intent.putExtra("tableID", tabletest.toString())
+            startActivity(intent)
+        }
     }
 }

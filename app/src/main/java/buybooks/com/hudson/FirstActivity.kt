@@ -19,7 +19,9 @@ class FirstActivity : AppCompatActivity() {
         btn!!.setOnClickListener {
             val intent = Intent(this@FirstActivity, ScanActivity::class.java)
             startActivity(intent)
+            finish()
         }
+
 
     }
 }
